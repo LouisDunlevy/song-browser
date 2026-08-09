@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Downstream</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0e0e0c;
+    --surface:  #18170f;
+    --surface2: #1f1e14;
+    --border:   #2c2b20;
+    --border2:  #3a3927;
+    --orange:   #e8914a;
+    --orange-d: #7a4520;
+    --text:     #e8e3d0;
+    --muted:    #6b6650;
+    --subtle:   #2a2919;
+    --radius:   6px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  .tab {
+    height: 48px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .tab.active  { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  .wordmark {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Layout ── */
+  .body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* ── Sidebar ── */
+  aside {
+    width: 168px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    overflow-y: auto;
+    flex-shrink: 0;
+    padding: 14px 0;
+  }
+
+  .aside-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 14px 10px;
+  }
+
+  .sess-item {
+    padding: 9px 14px;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+    transition: background 0.1s, border-color 0.1s;
+    user-select: none;
+  }
+  .sess-item:hover       { background: var(--surface2); }
+  .sess-item.active      { border-left-color: var(--orange); background: var(--surface2); }
+  .sess-date             { font-size: 12px; font-weight: 500; }
+  .sess-venue            { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); margin-top: 2px; }
+  .sess-count            { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* ── Track list ── */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    min-width: 0;
+  }
+
+  .list-header {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 2;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .list-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .track-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .track-row:hover   { background: var(--surface); }
+  .track-row.playing { background: var(--surface2); }
+
+  .play-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 12px;
+    transition: color 0.12s, border-color 0.12s;
+  }
+  .play-btn:hover,
+  .track-row.playing .play-btn {
+    color: var(--orange);
+    border-color: var(--orange);
+  }
+
+  .track-info   { flex: 1; min-width: 0; }
+  .track-name   { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .track-sub    { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); margin-top: 3px; }
+
+  .ver-badge {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    background: var(--subtle);
+    color: var(--orange);
+    border: 1px solid var(--orange-d);
+    padding: 2px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .ver-badge:hover { background: var(--orange-d); }
+
+  /* Version panel */
+  .ver-panel {
+    display: none;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    margin: 0 20px 2px;
+    padding: 10px 14px;
+  }
+  .ver-panel.open { display: block; }
+  .ver-panel-title {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .ver-opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .ver-opt:last-child { border-bottom: none; }
+  .ver-opt:hover .ver-opt-name { color: var(--orange); }
+  .ver-opt-sess { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); min-width: 48px; }
+  .ver-opt-name { font-size: 12px; transition: color 0.1s; }
+
+  /* Empty state */
+  .empty {
+    padding: 60px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  /* ── Player bar ── */
+  .player {
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    padding: 14px 24px;
+    flex-shrink: 0;
+  }
+
+  .np-label { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  .np-name  { font-size: 13px; font-weight: 500; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
+  .np-name.active { color: var(--text); }
+
+  .progress {
+    width: 100%;
+    height: 2px;
+    background: var(--border2);
+    border-radius: 2px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--orange);
+    border-radius: 2px;
+    width: 0%;
+    pointer-events: none;
+    transition: width 0.25s linear;
+  }
+
+  .controls { display: flex; align-items: center; gap: 14px; }
+  .ctrl {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    transition: color 0.12s;
+    padding: 2px;
+  }
+  .ctrl:hover { color: var(--text); }
+  .ctrl.pp {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    color: var(--orange);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ctrl.pp:hover { border-color: var(--orange); background: var(--subtle); }
+  .time-disp { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); margin-left: auto; }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    aside { width: 120px; }
+    .sess-venue { display: none; }
+    .track-row { padding: 10px 12px; }
+    .list-header { padding: 10px 12px; }
+    .player { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tab active" onclick="setView('sessions')" id="tab-sessions">Sessions</div>
+  <div class="tab"        onclick="setView('songs')"    id="tab-songs">By song</div>
+  <div class="wordmark">Downstream</div>
+</header>
+
+<div class="body">
+  <aside id="sidebar"></aside>
+  <main  id="content"></main>
+</div>
+
+<div class="player">
+  <div class="np-label">now playing</div>
+  <div class="np-name" id="np-name">— select a track —</div>
+  <div class="progress" id="progress" onclick="scrub(event)">
+    <div class="progress-fill" id="pfill"></div>
+  </div>
+  <div class="controls">
+    <button class="ctrl"    onclick="prevTrack()" aria-label="Previous"><i class="ti ti-player-skip-back"></i></button>
+    <button class="ctrl pp" onclick="togglePlay()" id="pp-btn" aria-label="Play / pause"><i class="ti ti-player-play" id="pp-icon"></i></button>
+    <button class="ctrl"    onclick="nextTrack()" aria-label="Next"><i class="ti ti-player-skip-forward"></i></button>
+    <span class="time-disp" id="time-disp">0:00 / 0:00</span>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  DATA  — add new sessions here as objects
+// ─────────────────────────────────────────────
+const SESSIONS = [
+  {
+    id: 'jan13', date: 'Jan 13', venue: 'Sunset',
+    tracks: [
+      { name: 'Swamp shanty',           id: '1nwjb4NLpArkGz_wJ3m6afWIfAzR73eso' },
+      { name: 'Lurch',                  id: '1w_cSRg_VHbM5TlCo5CjsWSgt_DXwn1HE' },
+      { name: 'Slow drive all in',      id: '1_ULG7H6irs9MwSnbWb9mGlAIQk18SZVQ' },
+      { name: 'Melodic half time',      id: '1cWJHYSlyKmuMn9E90onieMjaAJNIhtxK' },
+      { name: 'Funk punch',             id: '1CAD9_f6M_z2sMURuL7XQiuOpC4ngO7ZU' },
+      { name: 'Midnight stalker',       id: '1KpgKnOo6OBBeE5ch10Ufa-I0ZzgtpSCy' },
+      { name: '4am blues',              id: '1yijemVwsTRWsQki53WFS6ErrpMDpIHc6' },
+      { name: 'Six eight rumble',       id: '10BlLsKG9t-pY4CwhHbJWv6_me8tS40G3' },
+      { name: 'Moody floor tom',        id: '10W3d6bwUEGYBK5St0nG0_LhFdCk1pwst' },
+      { name: 'Swing straight alternate', id: '1YY24uCgP8JD2pU0tqf7-EkLY46al2vNf' },
+    ]
+  },
+  {
+    id: 'mar12', date: 'Mar 12', venue: 'Sunset',
+    tracks: [
+      { name: 'Miami petrol bomb',  id: '1aq2_ckVOURy3_GLbeYmyizPqa0MxCKaq' },
+      { name: 'Track 01',          id: '1DET7U3dLahepcK6T-iHuTZqHBsDisx9e', take: 1 },
+      { name: 'Track 01',          id: '1mBC2qNY-FJ-fKa2cpgmaxHfAosrWmWjU', take: 2 },
+      { name: 'Track 02',          id: '1xOOu0Tjdri4DaFL4M6YAj9sRXgGJA0CF', take: 1 },
+      { name: 'Track 02',          id: '1i3E9fHiQ3Vgzg4iFCVmsPFTXYY-pII8B', take: 2 },
+    ]
+  },
+  {
+    id: 'apr13', date: 'Apr 13', venue: 'Twin Earth',
+    tracks: [
+      { name: 'Six eight rumble',        id: '1SoKuOVdyopelimZiKhtMCpJ5Ggpetg9d' },
+      { name: 'Moody',                   id: '1SXtPVmmiTj4SzTn_fxX4SsctM0rYDxz5' },
+      { name: 'Slide blues',             id: '1G8nXimPo8ZhQDaM6TO48Ep_auMCN76nj' },
+      { name: 'Stalker',                 id: '1etaVRfWkbpU8uakdKHaAxKXzsIeLawT-', take: 1 },
+      { name: 'Straight blues fandango', id: '1tP5PzLxh4zqGm4UdN3gDHPOwvr1Jdcsf' },
+      { name: 'Stalker',                 id: '10YY75iRHsV56dyTYV-nMgVuYJiaS9Nvr', take: 2 },
+      { name: 'Dreamscape',              id: '1Qz_bk9kdyOBY2IAhjUraUR5nO56fRYsh' },
+      { name: 'Sevenfourseven',          id: '1VC50A3B6DXaWS2ZglkxNOA-HNgpbvdps' },
+    ]
+  },
+  {
+    id: 'may04', date: 'May 04', venue: 'Sunset',
+    tracks: [
+      { name: 'MFT',     id: '1iYWtT5aMgNT-vhKWo1jGfKWbnwTd0KUs', take: 1 },
+      { name: 'MFT',     id: '1hzIVPoOu5VADxs6GYzmLSdMSAyKfcLNh', take: 2 },
+      { name: 'MFT',     id: '1EAhvbXamXc4rsnvgNE1MjdwRnrZwaWl-', take: 3 },
+      { name: 'MFT',     id: '1GAmP0kINXPBEK6lpmMfk_BILtozbWANg', take: 4 },
+      { name: 'MFT',     id: '1zrHb4WDeg8gHFH0dXzGIXD_-Bg9iNu1j', take: 5 },
+      { name: 'Stalker', id: '11Hn5kSsF62vnm--3fLMfQ_Q9krGgxYIb', take: 1 },
+      { name: 'Stalker', id: '1egVmZBPxzKxdZqmooOhEy6979pCVkRDG', take: 2 },
+      { name: 'Stalker', id: '1kU7XV3BQ0L4SsZUSa1ppfz5OEIlyU_hK', take: 3 },
+      { name: 'Rumble',  id: '1jXVpW50vsGH2RVtfAKoo8P-5SvrCct5d', take: 1 },
+      { name: 'Rumble',  id: '1K6lEA1LtCxzeYNsN7Ah6QvvxlxU_Z2Cs', take: 2 },
+    ]
+  },
+  {
+    id: 'jun13', date: 'Jun 13', venue: 'Twin Earth',
+    tracks: [
+      { name: 'Blues warmup', id: '1LibEPpxLCsuwpdkgSxBcB05Q3iGtSx57', remix: true },
+      { name: 'Mist',         id: '1Cmbi83aDP8APSaLW6aZ9KaItqZjTUh3G' },
+      { name: 'Mist',         id: '12Uh9wDlyIxzwiTEKwj3lJr2QmYhgbWgR',           take: 2 },
+      { name: 'Mist',         id: '1DPM2ltiqge0b_dzvtMBq3EpETGL15duw',  take: 2,  remix: true },
+      { name: 'Mooody',       id: '1VkaylaDB98_zqJjCeKWJzesOI8hDgSf1',           take: 1 },
+      { name: 'Mooody',       id: '1BJYCy_DUmx8iFTkuwJ-Sw3T8SChEQ73I',           take: 2 },
+      { name: 'Rumble',       id: '1B4uZQF0v3MQIdisRZ6KR_kx_JQMyaK5i',           take: 2 },
+      { name: 'Rumble',       id: '1dQpgzSqKT7EqY2WWqImpX-TfuqGMxm8i',           take: 3 },
+      { name: 'Rumble',       id: '1pnWUuZecEPFa5PahJBOFaAyRb4rGCmo8',  take: 3,  remix: true },
+    ]
+  },
+  {
+    id: 'jul08', date: 'Jul 08', venue: 'Twin Earth',
+    tracks: [
+      { name: 'Lonely Lyndon',  id: '1dvpd9r6oFPJNCDe31doD-ik_mtoqg52a' },
+      { name: 'Straight jam',   id: '1sIOKwUjqzUdAQoGaFE0e9l-GhoSnx-a9' },
+      { name: 'New song bits',  id: '1Olv48o0TkEgNPwjX5KM3gZCvvWljJPII' },
+    ]
+  },
+];
+
+// ─────────────────────────────────────────────
+//  BUILD SONG MAP  (groups by canonical name)
+// ─────────────────────────────────────────────
+function buildSongMap() {
+  const map = {};
+  SESSIONS.forEach(s => {
+    s.tracks.forEach(t => {
+      const key = t.name.toLowerCase().trim();
+      if (!map[key]) map[key] = { name: t.name, versions: [] };
+      const parts = [s.date, t.take ? `take ${t.take}` : '', t.remix ? 'remix' : ''].filter(Boolean);
+      map[key].versions.push({ sess: s.date, label: parts.join(' · '), id: t.id });
+    });
+  });
+  return map;
+}
+const SONG_MAP = buildSongMap();
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+let view       = 'sessions';
+let curSessId  = 'jan13';
+let curTrackId = null;
+let isPlaying  = false;
+let queue      = [];
+let qIdx       = -1;
+let openVp     = null;
+const audio    = new Audio();
+
+audio.addEventListener('ended',       () => nextTrack());
+audio.addEventListener('timeupdate',  updateProgress);
+audio.addEventListener('loadedmetadata', updateProgress);
+
+// ─────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00';
+  return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+}
+function driveUrl(id) {
+  return `https://drive.google.com/uc?export=download&id=${id}`;
+}
+function trackLabel(t) {
+  return [t.take ? `take ${t.take}` : '', t.remix ? 'remix' : ''].filter(Boolean).join(' · ');
+}
+function slug(str) {
+  return 'vp-' + str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
+function updateProgress() {
+  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('time-disp').textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+}
+
+function scrub(e) {
+  if (!audio.src) return;
+  const bar = document.getElementById('progress');
+  const r   = bar.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+}
+
+// ─────────────────────────────────────────────
+//  VIEW SWITCHING
+// ─────────────────────────────────────────────
+function setView(v) {
+  view = v;
+  document.getElementById('tab-sessions').classList.toggle('active', v === 'sessions');
+  document.getElementById('tab-songs').classList.toggle('active',    v === 'songs');
+  openVp = null;
+  renderContent();
+}
+
+// ─────────────────────────────────────────────
+//  SIDEBAR
+// ─────────────────────────────────────────────
+function renderSidebar() {
+  document.getElementById('sidebar').innerHTML =
+    '<div class="aside-label">2026</div>' +
+    SESSIONS.map(s => `
+      <div class="sess-item ${s.id === curSessId ? 'active' : ''}" onclick="selectSession('${s.id}')">
+        <div class="sess-date">${s.date}</div>
+        <div class="sess-venue">${s.venue}</div>
+        <div class="sess-count">${s.tracks.length} tracks</div>
+      </div>`).join('');
+}
+
+function selectSession(id) {
+  curSessId = id;
+  renderSidebar();
+  if (view === 'sessions') renderContent();
+}
+
+// ─────────────────────────────────────────────
+//  CONTENT
+// ─────────────────────────────────────────────
+function renderContent() {
+  view === 'sessions' ? renderSessionView() : renderSongView();
+}
+
+function renderSessionView() {
+  const s = SESSIONS.find(x => x.id === curSessId);
+  queue = s.tracks;
+  const rows = s.tracks.map((t, i) => {
+    const playing = curTrackId === t.id;
+    const icon    = playing && isPlaying ? 'ti-player-pause' : 'ti-player-play';
+    const sub     = trackLabel(t) || '—';
+    return `<div class="track-row${playing ? ' playing' : ''}" onclick="playQueued(${i})">
+      <button class="play-btn" aria-label="Play ${t.name}"><i class="ti ${icon}"></i></button>
+      <div class="track-info">
+        <div class="track-name">${t.name}</div>
+        <div class="track-sub">${sub}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('content').innerHTML =
+    `<div class="list-header">
+       <span class="list-label">${s.date} · ${s.venue}</span>
+       <span class="list-label">${s.tracks.length} tracks</span>
+     </div>` + rows;
+}
+
+function renderSongView() {
+  const songs = Object.values(SONG_MAP);
+  const rows = songs.map(song => {
+    const id      = slug(song.name);
+    const playing = song.versions.some(v => v.id === curTrackId);
+    const icon    = playing && isPlaying ? 'ti-player-pause' : 'ti-player-play';
+    const multi   = song.versions.length > 1;
+    const sessStr = [...new Set(song.versions.map(v => v.sess))].join(' · ');
+
+    const verPanel = multi ? `
+      <div class="ver-panel" id="${id}">
+        <div class="ver-panel-title">versions</div>
+        ${song.versions.map(v => `
+          <div class="ver-opt" onclick="playVer('${v.id}', '${song.name.replace(/'/g,"\\'")} — ${v.label.replace(/'/g,"\\'")}')">
+            <span class="ver-opt-sess">${v.sess}</span>
+            <span class="ver-opt-name">${v.label}</span>
+          </div>`).join('')}
+      </div>` : '';
+
+    return `
+      <div class="track-row${playing ? ' playing' : ''}" onclick="playSongFirst('${song.name.replace(/'/g,"\\'")}')">
+        <button class="play-btn" aria-label="Play ${song.name}"><i class="ti ${icon}"></i></button>
+        <div class="track-info">
+          <div class="track-name">${song.name}</div>
+          <div class="track-sub">${sessStr}</div>
+        </div>
+        ${multi ? `<span class="ver-badge" onclick="toggleVp('${id}', event)">${song.versions.length} ver</span>` : ''}
+      </div>${verPanel}`;
+  }).join('');
+
+  document.getElementById('content').innerHTML =
+    `<div class="list-header">
+       <span class="list-label">All songs</span>
+       <span class="list-label">${songs.length} songs</span>
+     </div>` + rows;
+}
+
+// ─────────────────────────────────────────────
+//  VERSION PANEL
+// ─────────────────────────────────────────────
+function toggleVp(id, e) {
+  e.stopPropagation();
+  const el = document.getElementById(id);
+  if (!el) return;
+  const open = el.classList.contains('open');
+  if (openVp && openVp !== el) openVp.classList.remove('open');
+  el.classList.toggle('open', !open);
+  openVp = open ? null : el;
+}
+
+// ─────────────────────────────────────────────
+//  PLAYBACK
+// ─────────────────────────────────────────────
+function load(fileId, label) {
+  curTrackId = fileId;
+  audio.src  = driveUrl(fileId);
+  audio.play().catch(() => {});
+  isPlaying  = true;
+  const npName = document.getElementById('np-name');
+  npName.textContent = label;
+  npName.classList.add('active');
+  document.getElementById('pp-icon').className = 'ti ti-player-pause';
+  renderContent();
+}
+
+function playQueued(idx) {
+  qIdx = idx;
+  const t = queue[idx];
+  const sub = trackLabel(t);
+  load(t.id, t.name + (sub ? ' — ' + sub : ''));
+}
+
+function playSongFirst(name) {
+  const song = SONG_MAP[name.toLowerCase().trim()];
+  if (!song) return;
+  const v = song.versions[0];
+  load(v.id, name + ' — ' + v.label);
+}
+
+function playVer(fileId, label) {
+  load(fileId, label);
+}
+
+function togglePlay() {
+  if (!audio.src) return;
+  if (isPlaying) {
+    audio.pause();
+    isPlaying = false;
+    document.getElementById('pp-icon').className = 'ti ti-player-play';
+  } else {
+    audio.play();
+    isPlaying = true;
+    document.getElementById('pp-icon').className = 'ti ti-player-pause';
+  }
+  renderContent();
+}
+
+function nextTrack() {
+  if (view !== 'sessions' || !queue.length) return;
+  const next = qIdx + 1;
+  if (next < queue.length) playQueued(next);
+}
+
+function prevTrack() {
+  if (view !== 'sessions' || qIdx <= 0) return;
+  playQueued(qIdx - 1);
+}
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+renderSidebar();
+renderContent();
+</script>
+</body>
+</html>

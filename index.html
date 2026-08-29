@@ -327,80 +327,82 @@
 // ─────────────────────────────────────────────
 //  DATA  — add new sessions here as objects
 // ─────────────────────────────────────────────
+const R2_BASE = 'https://pub-6ce2e40a7d974dfcbc458659f36ced83.r2.dev/2026';
+
 const SESSIONS = [
   {
     id: 'jan13', date: 'Jan 13', venue: 'Sunset',
     tracks: [
-      { name: 'Swamp shanty',           id: '1nwjb4NLpArkGz_wJ3m6afWIfAzR73eso' },
-      { name: 'Lurch',                  id: '1w_cSRg_VHbM5TlCo5CjsWSgt_DXwn1HE' },
-      { name: 'Slow drive all in',      id: '1_ULG7H6irs9MwSnbWb9mGlAIQk18SZVQ' },
-      { name: 'Melodic half time',      id: '1cWJHYSlyKmuMn9E90onieMjaAJNIhtxK' },
-      { name: 'Funk punch',             id: '1CAD9_f6M_z2sMURuL7XQiuOpC4ngO7ZU' },
-      { name: 'Midnight stalker',       id: '1KpgKnOo6OBBeE5ch10Ufa-I0ZzgtpSCy' },
-      { name: '4am blues',              id: '1yijemVwsTRWsQki53WFS6ErrpMDpIHc6' },
-      { name: 'Six eight rumble',       id: '10BlLsKG9t-pY4CwhHbJWv6_me8tS40G3' },
-      { name: 'Moody floor tom',        id: '10W3d6bwUEGYBK5St0nG0_LhFdCk1pwst' },
-      { name: 'Swing straight alternate', id: '1YY24uCgP8JD2pU0tqf7-EkLY46al2vNf' },
+      { name: 'Swamp shanty',           file: 'Jan 13 Sunset/Song 01 - swamp shanty bass and drums.mp3' },
+      { name: 'Lurch',                  file: 'Jan 13 Sunset/Song 02 - lurch straight bass and drums.mp3' },
+      { name: 'Slow drive all in',      file: 'Jan 13 Sunset/Song 03 - slow drive all in.mp3' },
+      { name: 'Melodic half time',      file: 'Jan 13 Sunset/Song 04 - melodic half time.mp3' },
+      { name: 'Funk punch',             file: 'Jan 13 Sunset/Song 05 - funck punch.mp3' },
+      { name: 'Midnight stalker',       file: 'Jan 13 Sunset/Song 06 - midnight stalker.mp3' },
+      { name: '4am blues',              file: 'Jan 13 Sunset/Song 07 - 4am blues.mp3' },
+      { name: 'Six eight rumble',       file: 'Jan 13 Sunset/Song 08 - six eight rumble.mp3' },
+      { name: 'Moody floor tom',        file: 'Jan 13 Sunset/Song 10 - moody floor tom.mp3' },
+      { name: 'Swing straight alternate', file: 'Jan 13 Sunset/Song 12 swing straight alternate.mp3' },
     ]
   },
   {
     id: 'mar12', date: 'Mar 12', venue: 'Sunset',
     tracks: [
-      { name: 'Miami petrol bomb',  id: '1aq2_ckVOURy3_GLbeYmyizPqa0MxCKaq' },
-      { name: 'Track 01',          id: '1DET7U3dLahepcK6T-iHuTZqHBsDisx9e', take: 1 },
-      { name: 'Track 01',          id: '1mBC2qNY-FJ-fKa2cpgmaxHfAosrWmWjU', take: 2 },
-      { name: 'Track 02',          id: '1xOOu0Tjdri4DaFL4M6YAj9sRXgGJA0CF', take: 1 },
-      { name: 'Track 02',          id: '1i3E9fHiQ3Vgzg4iFCVmsPFTXYY-pII8B', take: 2 },
+      { name: 'Miami petrol bomb',  file: 'Mar 12 Sunset/Miami Petrol Bomb.mp3' },
+      { name: 'Track 01',          file: 'Mar 12 Sunset/track 01 take 1.mp3', take: 1 },
+      { name: 'Track 01',          file: 'Mar 12 Sunset/track 01 take 2.mp3', take: 2 },
+      { name: 'Track 02',          file: 'Mar 12 Sunset/track 02 take 1.mp3', take: 1 },
+      { name: 'Track 02',          file: 'Mar 12 Sunset/track 02 take 2.mp3', take: 2 },
     ]
   },
   {
     id: 'apr13', date: 'Apr 13', venue: 'Twin Earth',
     tracks: [
-      { name: 'Six eight rumble',        id: '1SoKuOVdyopelimZiKhtMCpJ5Ggpetg9d' },
-      { name: 'Moody',                   id: '1SXtPVmmiTj4SzTn_fxX4SsctM0rYDxz5' },
-      { name: 'Slide blues',             id: '1G8nXimPo8ZhQDaM6TO48Ep_auMCN76nj' },
-      { name: 'Stalker',                 id: '1etaVRfWkbpU8uakdKHaAxKXzsIeLawT-', take: 1 },
-      { name: 'Straight blues fandango', id: '1tP5PzLxh4zqGm4UdN3gDHPOwvr1Jdcsf' },
-      { name: 'Stalker',                 id: '10YY75iRHsV56dyTYV-nMgVuYJiaS9Nvr', take: 2 },
-      { name: 'Dreamscape',              id: '1Qz_bk9kdyOBY2IAhjUraUR5nO56fRYsh' },
-      { name: 'Sevenfourseven',          id: '1VC50A3B6DXaWS2ZglkxNOA-HNgpbvdps' },
+      { name: 'Six eight rumble',        file: 'Apr 13 Twin Earth/cleaned/track_01.mp3' },
+      { name: 'Moody',                   file: 'Apr 13 Twin Earth/cleaned/track_03.mp3' },
+      { name: 'Slide blues',             file: 'Apr 13 Twin Earth/cleaned/track_04.mp3' },
+      { name: 'Stalker',                 file: 'Apr 13 Twin Earth/cleaned/track_05.mp3', take: 1 },
+      { name: 'Straight blues fandango', file: 'Apr 13 Twin Earth/cleaned/track_06.mp3' },
+      { name: 'Stalker',                 file: 'Apr 13 Twin Earth/cleaned/track_07.mp3', take: 2 },
+      { name: 'Dreamscape',              file: 'Apr 13 Twin Earth/cleaned/track_08.mp3' },
+      { name: 'Sevenfourseven',          file: 'Apr 13 Twin Earth/cleaned/track_09.mp3' },
     ]
   },
   {
     id: 'may04', date: 'May 04', venue: 'Sunset',
     tracks: [
-      { name: 'MFT',     id: '1iYWtT5aMgNT-vhKWo1jGfKWbnwTd0KUs', take: 1 },
-      { name: 'MFT',     id: '1hzIVPoOu5VADxs6GYzmLSdMSAyKfcLNh', take: 2 },
-      { name: 'MFT',     id: '1EAhvbXamXc4rsnvgNE1MjdwRnrZwaWl-', take: 3 },
-      { name: 'MFT',     id: '1GAmP0kINXPBEK6lpmMfk_BILtozbWANg', take: 4 },
-      { name: 'MFT',     id: '1zrHb4WDeg8gHFH0dXzGIXD_-Bg9iNu1j', take: 5 },
-      { name: 'Stalker', id: '11Hn5kSsF62vnm--3fLMfQ_Q9krGgxYIb', take: 1 },
-      { name: 'Stalker', id: '1egVmZBPxzKxdZqmooOhEy6979pCVkRDG', take: 2 },
-      { name: 'Stalker', id: '1kU7XV3BQ0L4SsZUSa1ppfz5OEIlyU_hK', take: 3 },
-      { name: 'Rumble',  id: '1jXVpW50vsGH2RVtfAKoo8P-5SvrCct5d', take: 1 },
-      { name: 'Rumble',  id: '1K6lEA1LtCxzeYNsN7Ah6QvvxlxU_Z2Cs', take: 2 },
+      { name: 'MFT',     file: 'May 4 Sunset/MFT take 01.mp3', take: 1 },
+      { name: 'MFT',     file: 'May 4 Sunset/MFT take 02.mp3', take: 2 },
+      { name: 'MFT',     file: 'May 4 Sunset/MFT take 03.mp3', take: 3 },
+      { name: 'MFT',     file: 'May 4 Sunset/MFT take 04.mp3', take: 4 },
+      { name: 'MFT',     file: 'May 4 Sunset/MFT take 05.mp3', take: 5 },
+      { name: 'Stalker', file: 'May 4 Sunset/Stalker take 01.mp3', take: 1 },
+      { name: 'Stalker', file: 'May 4 Sunset/Stalker take 02.mp3', take: 2 },
+      { name: 'Stalker', file: 'May 4 Sunset/Stalker take 03.mp3', take: 3 },
+      { name: 'Rumble',  file: 'May 4 Sunset/Rumble take 01.mp3', take: 1 },
+      { name: 'Rumble',  file: 'May 4 Sunset/Rumble take 02.mp3', take: 2 },
     ]
   },
   {
     id: 'jun13', date: 'Jun 13', venue: 'Twin Earth',
     tracks: [
-      { name: 'Blues warmup', id: '1LibEPpxLCsuwpdkgSxBcB05Q3iGtSx57', remix: true },
-      { name: 'Mist',         id: '1Cmbi83aDP8APSaLW6aZ9KaItqZjTUh3G' },
-      { name: 'Mist',         id: '12Uh9wDlyIxzwiTEKwj3lJr2QmYhgbWgR',           take: 2 },
-      { name: 'Mist',         id: '1DPM2ltiqge0b_dzvtMBq3EpETGL15duw',  take: 2,  remix: true },
-      { name: 'Mooody',       id: '1VkaylaDB98_zqJjCeKWJzesOI8hDgSf1',           take: 1 },
-      { name: 'Mooody',       id: '1BJYCy_DUmx8iFTkuwJ-Sw3T8SChEQ73I',           take: 2 },
-      { name: 'Rumble',       id: '1B4uZQF0v3MQIdisRZ6KR_kx_JQMyaK5i',           take: 2 },
-      { name: 'Rumble',       id: '1dQpgzSqKT7EqY2WWqImpX-TfuqGMxm8i',           take: 3 },
-      { name: 'Rumble',       id: '1pnWUuZecEPFa5PahJBOFaAyRb4rGCmo8',  take: 3,  remix: true },
+      { name: 'Blues warmup', file: 'June 13 Twin Earth/Blues Warmup_remix.mp3', remix: true },
+      { name: 'Mist',         file: 'June 13 Twin Earth/Mist.mp3' },
+      { name: 'Mist',         file: 'June 13 Twin Earth/Mist take 02.mp3',           take: 2 },
+      { name: 'Mist',         file: 'June 13 Twin Earth/Mist take 02_remix.mp3',  take: 2,  remix: true },
+      { name: 'Mooody',       file: 'June 13 Twin Earth/Mooody take 01.mp3',           take: 1 },
+      { name: 'Mooody',       file: 'June 13 Twin Earth/Mooody take 02.mp3',           take: 2 },
+      { name: 'Rumble',       file: 'June 13 Twin Earth/Rumble take 02.mp3',           take: 2 },
+      { name: 'Rumble',       file: 'June 13 Twin Earth/Rumble take 03.mp3',           take: 3 },
+      { name: 'Rumble',       file: 'June 13 Twin Earth/Rumble take 03_remix.mp3',  take: 3,  remix: true },
     ]
   },
   {
     id: 'jul08', date: 'Jul 08', venue: 'Twin Earth',
     tracks: [
-      { name: 'Lonely Lyndon',  id: '1dvpd9r6oFPJNCDe31doD-ik_mtoqg52a' },
-      { name: 'Straight jam',   id: '1sIOKwUjqzUdAQoGaFE0e9l-GhoSnx-a9' },
-      { name: 'New song bits',  id: '1Olv48o0TkEgNPwjX5KM3gZCvvWljJPII' },
+      { name: 'Lonely Lyndon',  file: 'Jul 8 Twin Earth/Lonely Lyndon.mp3' },
+      { name: 'Straight jam',   file: 'Jul 8 Twin Earth/Straight Jam.mp3' },
+      { name: 'New song bits',  file: 'Jul 8 Twin Earth/New Song Bits.mp3' },
     ]
   },
 ];
@@ -415,7 +417,7 @@ function buildSongMap() {
       const key = t.name.toLowerCase().trim();
       if (!map[key]) map[key] = { name: t.name, versions: [] };
       const parts = [s.date, t.take ? `take ${t.take}` : '', t.remix ? 'remix' : ''].filter(Boolean);
-      map[key].versions.push({ sess: s.date, label: parts.join(' · '), id: t.id });
+      map[key].versions.push({ sess: s.date, label: parts.join(' · '), file: t.file, id: t.id });
     });
   });
   return map;
@@ -447,6 +449,12 @@ function fmt(s) {
 }
 function driveUrl(id) {
   return `https://drive.google.com/uc?export=download&id=${id}`;
+}
+function trackUrl(t) {
+  return t.file ? `${R2_BASE}/${encodeURI(t.file)}` : driveUrl(t.id);
+}
+function trackKey(t) {
+  return t.file || t.id;
 }
 function trackLabel(t) {
   return [t.take ? `take ${t.take}` : '', t.remix ? 'remix' : ''].filter(Boolean).join(' · ');
@@ -510,7 +518,7 @@ function renderSessionView() {
   const s = SESSIONS.find(x => x.id === curSessId);
   queue = s.tracks;
   const rows = s.tracks.map((t, i) => {
-    const playing = curTrackId === t.id;
+    const playing = curTrackId === trackKey(t);
     const icon    = playing && isPlaying ? 'ti-player-pause' : 'ti-player-play';
     const sub     = trackLabel(t) || '—';
     return `<div class="track-row${playing ? ' playing' : ''}" onclick="playQueued(${i})">
@@ -533,7 +541,7 @@ function renderSongView() {
   const songs = Object.values(SONG_MAP);
   const rows = songs.map(song => {
     const id      = slug(song.name);
-    const playing = song.versions.some(v => v.id === curTrackId);
+    const playing = song.versions.some(v => trackKey(v) === curTrackId);
     const icon    = playing && isPlaying ? 'ti-player-pause' : 'ti-player-play';
     const multi   = song.versions.length > 1;
     const sessStr = [...new Set(song.versions.map(v => v.sess))].join(' · ');
@@ -542,7 +550,7 @@ function renderSongView() {
       <div class="ver-panel" id="${id}">
         <div class="ver-panel-title">versions</div>
         ${song.versions.map(v => `
-          <div class="ver-opt" onclick="playVer('${v.id}', '${song.name.replace(/'/g,"\\'")} — ${v.label.replace(/'/g,"\\'")}')">
+          <div class="ver-opt" onclick="playVer('${(v.file||'').replace(/'/g,"\\'")}', '${v.id||''}', '${song.name.replace(/'/g,"\\'")} — ${v.label.replace(/'/g,"\\'")}')">
             <span class="ver-opt-sess">${v.sess}</span>
             <span class="ver-opt-name">${v.label}</span>
           </div>`).join('')}
@@ -582,9 +590,9 @@ function toggleVp(id, e) {
 // ─────────────────────────────────────────────
 //  PLAYBACK
 // ─────────────────────────────────────────────
-function load(fileId, label) {
-  curTrackId = fileId;
-  audio.src  = driveUrl(fileId);
+function load(t, label) {
+  curTrackId = trackKey(t);
+  audio.src  = trackUrl(t);
   audio.play().catch(() => {});
   isPlaying  = true;
   const npName = document.getElementById('np-name');
@@ -598,18 +606,18 @@ function playQueued(idx) {
   qIdx = idx;
   const t = queue[idx];
   const sub = trackLabel(t);
-  load(t.id, t.name + (sub ? ' — ' + sub : ''));
+  load(t, t.name + (sub ? ' — ' + sub : ''));
 }
 
 function playSongFirst(name) {
   const song = SONG_MAP[name.toLowerCase().trim()];
   if (!song) return;
   const v = song.versions[0];
-  load(v.id, name + ' — ' + v.label);
+  load(v, name + ' — ' + v.label);
 }
 
-function playVer(fileId, label) {
-  load(fileId, label);
+function playVer(file, id, label) {
+  load({ file: file || undefined, id: id || undefined }, label);
 }
 
 function togglePlay() {

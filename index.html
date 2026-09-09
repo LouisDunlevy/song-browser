@@ -455,6 +455,12 @@ const audio    = new Audio();
 
 audio.addEventListener('ended',       () => nextTrack());
 audio.addEventListener('timeupdate',  updateProgress);
+if ('mediaSession' in navigator) {
+  navigator.mediaSession.setActionHandler('play',  () => { if (!isPlaying) togglePlay(); });
+  navigator.mediaSession.setActionHandler('pause', () => { if (isPlaying)  togglePlay(); });
+  navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
+  navigator.mediaSession.setActionHandler('nexttrack',     nextTrack);
+}
 audio.addEventListener('loadedmetadata', updateProgress);
 
 // ─────────────────────────────────────────────
@@ -616,6 +622,10 @@ function load(t, label) {
   npName.textContent = label;
   npName.classList.add('active');
   document.getElementById('pp-icon').className = 'ti ti-player-pause';
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: label, artist: 'Downstream' });
+    navigator.mediaSession.playbackState = 'playing';
+  }
   renderContent();
 }
 
@@ -648,17 +658,18 @@ function togglePlay() {
     isPlaying = true;
     document.getElementById('pp-icon').className = 'ti ti-player-pause';
   }
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
   renderContent();
 }
 
 function nextTrack() {
-  if (view !== 'sessions' || !queue.length) return;
+  if (!queue.length) return;
   const next = qIdx + 1;
   if (next < queue.length) playQueued(next);
 }
 
 function prevTrack() {
-  if (view !== 'sessions' || qIdx <= 0) return;
+  if (qIdx <= 0) return;
   playQueued(qIdx - 1);
 }
 
